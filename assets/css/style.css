@@ -1,17 +1,20 @@
 body {
     box-sizing: border-box;
+    font-family: 'Roboto Condensed', sans-serif;
 }
 
 header {
     text-align: center;
+    padding: 8px;
+    background-color: #be2a2a;
 
     display: none;
 }
 
 main {
     position: absolute;
-    top: 40px;
-    bottom: 35px;
+    top: 0px;
+    bottom: 0px;
     left: 0;
     right: 0;
     min-width: 300px;
@@ -19,7 +22,11 @@ main {
 }
 
 section {
+    margin-top: 24px;
+}
 
+span {
+    cursor: default;
 }
 
 #div-chat {
@@ -27,11 +34,17 @@ section {
     bottom: 0px;
     width: 100%;
     height: 225px;
+    box-sizing: border-box;
 
     padding: 6px;
     display: flex;
     flex-direction: column-reverse;
     overflow: hidden;
+
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #be2a2a; 
+    border-radius: 8px;
 }
 
 #chat-group {
@@ -45,14 +58,21 @@ section {
     width: 100%;
 }
 
+input, button {
+    font-size: inherit;
+    font-family: inherit;
+    padding-left: 4px;
+}
+
 #div-mainPlay {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 #div-mainPlay > div {
-    margin: 24px 0;
+    margin-bottom: 16px;
 }
 
 #div-rps {
@@ -62,9 +82,90 @@ section {
 }
 
 .rps-button {
-    width: 120px;
-    height: 120px;
+    width: 150px;
+    height: 150px;
     flex-shrink: 1;
+
+    display: flex;
+    justify-content: center;
+
+    background-position: center;
+    background-size: cover;
+
+    overflow: hidden;
+}
+
+.clickable:hover {
+    outline: 2px solid #be2a2a;
+}
+
+.rps-button-label {
+    align-self: center;
+    text-align: center;
+
+    padding: 12px;
+    background-color: white;
+    opacity: 0.8;
+    color: #be2a2a;
+    font-weight: bolder;
+}
+
+#btnRock {
+    background-image: url('../images/stone-img.jpg');
+}
+
+#btnPaper {
+    background-image: url('../images/paper-img.jpg');
+}
+
+#btnScissors {
+    background-image: url('../images/scissor-img.jpg');
+}
+
+#div-playerInfo {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#div-playerInfo > div {
+    padding: 8px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    line-height: 1.5;
+}
+
+.div-overlay {
+    position: absolute;
+    top: 150px;
+    left: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 60px 36px;
+    background-color: white;
+
+}
+
+.dark {
+    background-color: #be2a2a;
+    border: 2px solid #be2a2a;
+    color: white;
+}
+
+.light {
+    border: 2px solid #be2a2a;
+}
+
+.hide {
+    display: none;
+}
+
+.fade {
+    opacity: 0.65;
 }
 
 header::after, section::after {
@@ -83,7 +184,7 @@ footer {
     text-align: center;
     font-size: 12px;
     border-top: 3px solid #ccc;
-    
+
     display: none;
 }
 
@@ -106,6 +207,9 @@ footer {
     
     main {
         max-width: 900px;
+        padding-right: 24px;
+        top: 40px;
+        bottom: 35px;
     }
 
     header {
@@ -122,12 +226,27 @@ footer {
         width: 35%;
         box-sizing: border-box;
         height: auto;
-        min-height: 300px;
+        min-height: 340px;
+
+        border-width: 1px;
     }
 
     #div-mainPlay {
         float: right;
         width: 65%;
     }
+
+    #span-name {
+        font-size: 24px;
+    }
+
+    #span-opponent {
+        font-size: 20px;
+    }
 }
 
+@media screen AND (max-height: 575px) {
+    #div-chat {
+        display: none;
+    }
+}

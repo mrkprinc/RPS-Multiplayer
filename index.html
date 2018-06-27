@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
         <!-- stylesheets -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="./assets/css/reset.css">
         <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
 
@@ -17,43 +18,73 @@
     
     <body>
         
-        <header class='wf1'>
+        <header class='dark'>
             Rock Paper Scissors Game
         </header>
 
         <main>
 
-            <section id='div-chat' class='wf1'>
+            <section id='div-chat' class=''>
                 
                 <div id='chat-group'>
-                    <input type='text' id='input-chat' placeholder='chat here'>
-                    <button type='submit' id='btn-chat'>Enter</button>
+                    <input type='text' id='input-chat' maxlength='250' placeholder='chat here'>
+                    <button type='submit' id='btn-chat' class=''>Enter</button>
                 </div>
 
             </section>
 
-            <section id='div-mainPlay'>
+            <section id='div-mainPlay' class=''>
 
                 <!-- main play section -->
 
-                <div id='div-userEnter'>
+                <div id='div-userEnter' class='hide'>
                     <!-- <label for='input-name'>Your name: </label> -->
                     <input type='text' id='input-name' maxlength='10' placeholder='Your name'>
-                    <button type='submit' id='btn-enterGame'>Enter Game</button>
+                    <button type='submit' id='btn-enterGame' class='clickable'>Enter Game</button>
                 </div>
 
                 <div id='div-rps'>
-                    <div id='btnRock' class='rps-button wf2'></div>
-                    <div id='btnPaper' class='rps-button wf2'></div>
-                    <div id='btnScissors' class='rps-button wf2'></div>
+
+                    <div id='btnRock' class='rps-button clickable'>
+                        <span class='rps-button-label'>ROCK</span>
+                    </div>
+                    <div id='btnPaper' class='rps-button clickable'>
+                        <span class='rps-button-label'>PAPER</span>
+                    </div>
+                    <div id='btnScissors' class='rps-button clickable'>
+                        <span class='rps-button-label'>SCISSORS</span>
+                    </div>
+
+                </div>
+
+                <div id='div-message'>
+                    Message goes here
                 </div>
 
                 <div id='div-playerInfo'>
-                    player info
+                    
+                    <div class='dark'>
+                        <span id='span-name'>
+                            Your Name
+                        </span>
+                    </div>
+
+                    <div class='light'>
+                        <span id='span-wins'>W: 0</span>
+                        <span id='span-losses'>L: 0</span>
+                    </div> &nbsp;
+
+                    <div class='light'>
+                        <span>Your opponent:</span>
+                        <span id='span-opponent'>
+                            Opponent
+                        </span>
+                    </div>
+
                 </div>
 
-                <div id='div-overlay'>
-
+                <div id='div-exitButton' class='clickable'>
+                    <button type='submit'>Exit Game</button>
                 </div>
     
             </section>
