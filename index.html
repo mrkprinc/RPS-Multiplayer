@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Rock-Paper-Scissors</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- stylesheets -->
+        <link rel="stylesheet" type="text/css" href="./assets/css/reset.css">
+        <link rel="stylesheet" type="text/css" href="./assets/css/style.css">
+
+        <!-- jquery, firebase -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    </head>
+    
+    <body>
+        
+        <header class='wf1'>
+            Rock Paper Scissors Game
+        </header>
+
+        <main>
+
+            <section id='div-chat' class='wf1'>
+                
+                <div id='chat-group'>
+                    <input type='text' id='input-chat' placeholder='chat here'>
+                    <button type='submit' id='btn-chat'>Enter</button>
+                </div>
+
+            </section>
+
+            <section id='div-mainPlay'>
+
+                <!-- main play section -->
+
+                <div id='div-userEnter'>
+                    <!-- <label for='input-name'>Your name: </label> -->
+                    <input type='text' id='input-name' maxlength='10' placeholder='Your name'>
+                    <button type='submit' id='btn-enterGame'>Enter Game</button>
+                </div>
+
+                <div id='div-rps'>
+                    <div id='btnRock' class='rps-button wf2'></div>
+                    <div id='btnPaper' class='rps-button wf2'></div>
+                    <div id='btnScissors' class='rps-button wf2'></div>
+                </div>
+
+                <div id='div-playerInfo'>
+                    player info
+                </div>
+
+                <div id='div-overlay'>
+
+                </div>
+    
+            </section>
+
+        </main>
+    
+
+    
+        <footer>
+            &copy; Mark Prince 2018
+        </footer>
+        
+        <script src="assets/javascript/game.js" type="text/javascript"></script>
+        
+    </body>
+    
+</html>
