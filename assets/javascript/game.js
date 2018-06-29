@@ -26,11 +26,11 @@ var openGame = [];
 // start value event listener for open games
 
 // ***TEMP***
-database.ref().update({'openGame': [false]});
+database.ref('openGame').update({'openGame': [false]});
 
 database.ref('openGame').on('value', function(snapshot) {
     // update local variable to match value in firebase
-    openGame = snapshot.val();
+    openGame = snapshot.val().openGame;
     console.log(openGame);
 })
 
@@ -75,25 +75,50 @@ $('#btn-enterGame').on('click', function() {
         // push new user to database, capture ID
         playerID = database.ref('players').push({'name': playerName}).key;
 
-        // add player
-        // if openGame[0] is false, no available spot in an open game - start new game
-        if(openGame[0] === false) {
-            // push new game, capture reference key
-            gameID = database.ref('games').push({
-                'players':{0: playerID},
-                'gameOn': false}).key;
-
-            // ***TEMP***
-            database.ref('games/' + gameID + '/players').update({1: 'test'});
-        } 
-
-        //turn off openGame event listener
-        database.ref('openGame').off('value');
-
-        //create gameOn event listener
-        database.ref('games/' + gameID + '/gameOn')
+        enterGame();
     }
 })
+
+function enterGame() {
+
+    // add player
+    // if openGame[0] is false, no available spot in an open game - start new game
+    if(openGame[0] === false) {
+        // push new game, capture reference key
+        gameID = database.ref('games').push({
+            'players':{'p0': playerID}}).key;
+
+        // change database openGame
+        database.ref('openGame').update({'openGame': [true, gameID]});
+
+    } else if(openGame[0] === true) {
+
+        console.log('openGame true');
+
+        // join open game
+        gameID = openGame[1];
+        database.ref('games/' + gameID + '/players').update({'p1': playerID});
+        database.ref('games/' + gameID + '/gameOn').update({'gameOn': true});
+
+        // get opponent name
+
+        // change database openGame
+        database.ref('openGame').update({'openGame': [false]});
+
+        startGame();
+    }
+
+}
+
+function startGame() {
+    //turn off openGame and new player event listener
+    database.ref('openGame').off('value');
+    database.ref('games/' + gameID + '/players').off('child_added');
+
+    console.log('start game');
+    console.log(playerName);
+    console.log(opponentName);
+}
 
 
 // EXECUTE ON LOAD
