@@ -29,6 +29,10 @@ span {
     cursor: default;
 }
 
+b {
+    font-weight: 800;
+}
+
 #div-chat {
     position: absolute;
     bottom: 0px;
@@ -52,6 +56,14 @@ span {
     border-width: 1px 0;
     border-style: solid;
     padding: 6px 0;
+}
+
+#chat-window {
+    display: flex;
+    flex-direction: column-reverse;
+    overflow: auto;
+    padding: 4px 0;
+    line-height: 1.2;
 }
 
 #input-chat {
@@ -225,8 +237,7 @@ footer {
         float: right;
         width: 35%;
         box-sizing: border-box;
-        height: auto;
-        min-height: 340px;
+        height: 340px;
 
         border-width: 1px;
     }
