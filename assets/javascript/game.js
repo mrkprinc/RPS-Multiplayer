@@ -1,5 +1,6 @@
 $(document).ready(function() {
 
+$('#div-mainPlay > div').hide();
 
 // Initialize Firebase
 var config = {
@@ -68,6 +69,11 @@ function enterGame() {
         // change database openGame
         database.ref('openGame').update({'openGame': [true, gameID]});
 
+        // display waiting message
+        $('#div-message')
+            .html('<span>Waiting for second player...</span>')
+            .slideDown();
+
     } else if(openGame[0] === true) {
 
         console.log('openGame true');
@@ -86,18 +92,24 @@ function enterGame() {
     // event listener for players added
     database.ref('games/' + gameID + '/players').on('value', function(snapshot) {
 
-        // count players
+        // loop players - count players, get opponentName
         var i = 0;
         snapshot.forEach(function(childSnapshot) {
-            console.log('child --');
-            console.log(childSnapshot.val());
-
             i++;
+
+            // get opponent name
+            if(childSnapshot.val().id !== playerID) {
+                opponentName = childSnapshot.val().name;
+            }
         })
 
-        // if there are two players start game
         if(i === 2) {
+            // if there are two players start game
             startGame();
+
+        } else if(i > 2) {
+            // if more than two players have joined the same game (error)
+            gameOver();
         }
 
     })
@@ -106,14 +118,47 @@ function enterGame() {
 
 function startGame() {
 
-    //turn off openGame and new player event listener
+    // add player and opponent names to display
+    $('#span-name').html(playerName);
+    $('#span-opponent').html(opponentName);
+    
+    // message
+    $('#div-message')
+        .html('<span>1, 2, 3...choose!</span>')
+        .slideDown();
+
+    // turn off openGame and new player event listener
     database.ref('openGame').off('value');
-    database.ref('games/' + gameID + '/players').off('child_added');
+    database.ref('games/' + gameID + '/players').off('value');
 
+    // game on = true and turn on listener
     gameOn = true;
+    database.ref('games/' + gameID + '/gameOn').on('value', function(snapshot) {
 
+        // if gameOn changes to false, end the game
+        if(snapshot.val().gameOn === false) {
+            endGame();
+        }
+    })
 
-    // CHAT
+    // start chat
+    startChat();
+
+    // hide start, show gameplay divs
+    $('.show-start').slideUp();
+    $('.show-play').slideDown();
+
+    // rps button listener
+    $('.rps-button').on('click', function() {
+
+    })
+}
+
+function gameOver() {
+    console.log('GAME OVER');
+}
+
+function startChat() {
 
     // chat enter button
     $('#btn-chat').on('click', function() {
@@ -141,16 +186,13 @@ function startGame() {
             .html(msgString)
             .prependTo($('#chat-window'));
     })
-
-    console.log('start game');
-    console.log(playerName);
-    console.log(opponentName);
 }
-
 
 // EXECUTE ON LOAD
 
-$('#div-userEnter').removeClass('hide');
+// $('#div-mainPlay > div').hide();
+$('.show-start').slideDown();
+
 
 })
-
+// document onload 

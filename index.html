@@ -41,13 +41,13 @@
 
                 <!-- main play section -->
 
-                <div id='div-userEnter' class='hide'>
+                <div id='div-userEnter' class='show-start'>
                     <!-- <label for='input-name'>Your name: </label> -->
                     <input type='text' id='input-name' maxlength='10' placeholder='Your name'>
                     <button type='submit' id='btn-enterGame' class='clickable'>Enter Game</button>
                 </div>
 
-                <div id='div-rps'>
+                <div id='div-rps' class='show-play'>
 
                     <div id='btnRock' class='rps-button clickable'>
                         <span class='rps-button-label'>ROCK</span>
@@ -61,11 +61,11 @@
 
                 </div>
 
-                <div id='div-message'>
-                    Message goes here
+                <div id='div-message' class='show-message'>
+
                 </div>
 
-                <div id='div-playerInfo'>
+                <div id='div-playerInfo' class='show-play'>
                     
                     <div class='dark'>
                         <span id='span-name'>
@@ -87,8 +87,15 @@
 
                 </div>
 
-                <div id='div-exitButton' class='clickable'>
+                <div id='div-exitButton' class='clickable show-play'>
                     <button type='submit'>Exit Game</button>
+                </div>
+
+                <div id='div-gameOver' class='center show-end'>
+                    <span>This game has been terminated.</span>
+                    <div class='clickable'>
+                        <button type='submit'>Enter New Game</button>
+                    </div>
                 </div>
 
             </section>

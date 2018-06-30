@@ -1,6 +1,7 @@
 body {
     box-sizing: border-box;
     font-family: 'Roboto Condensed', sans-serif;
+    line-height: 1.5;
 }
 
 header {
@@ -31,6 +32,10 @@ span {
 
 b {
     font-weight: 800;
+}
+
+.center {
+    text-align: center;
 }
 
 #div-chat {
@@ -113,7 +118,6 @@ input, button {
 
 .rps-button-label {
     align-self: center;
-    text-align: center;
 
     padding: 12px;
     background-color: white;
