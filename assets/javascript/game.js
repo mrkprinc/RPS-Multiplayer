@@ -34,34 +34,6 @@ database.ref('openGame').on('value', function(snapshot) {
     console.log(openGame);
 })
 
-// CHAT
-
-// chat enter button
-$('#btn-chat').on('click', function() {
-
-    if(gameOn === true) {
-        // get new chat from input field
-        var thisMsg = $('#input-chat').val().trim();
-        // push to database at chat/game reference
-        database.ref('chat/' + gameID).push({'player': playerID[1], 'msg': thisMsg});
-        //clear input field
-        $('#input-chat').val('');
-    }
-
-})
-
-// chat database event listen
-database.ref('chat/' + gameID).on('child_added', function(snapshot) {
-    // format new msg for display
-    var msgString = '<b>' + snapshot.val().player + ':</b> ' + snapshot.val().msg;
-    
-    // append new span to chat window
-    var newSpan = $('<span>');
-    newSpan
-        .html(msgString)
-        .prependTo($('#chat-window'));
-})
-
 
 // ENTER GAME
 
@@ -76,6 +48,9 @@ $('#btn-enterGame').on('click', function() {
         playerID = database.ref('players').push({'name': playerName}).key;
 
         enterGame();
+
+        // clear field
+        $('#input-name').val('');
     }
 })
 
@@ -85,8 +60,10 @@ function enterGame() {
     // if openGame[0] is false, no available spot in an open game - start new game
     if(openGame[0] === false) {
         // push new game, capture reference key
-        gameID = database.ref('games').push({
-            'players':{'p0': playerID}}).key;
+        gameID = database.ref('games').push({'gameOn': false}).key;
+
+        // push this player
+        database.ref('games/' + gameID + '/players').push({'id': playerID, 'name': playerName});
 
         // change database openGame
         database.ref('openGame').update({'openGame': [true, gameID]});
@@ -97,23 +74,73 @@ function enterGame() {
 
         // join open game
         gameID = openGame[1];
-        database.ref('games/' + gameID + '/players').update({'p1': playerID});
+        database.ref('games/' + gameID + '/players').push({'id': playerID, 'name': playerName});
+
+        //update gameOn
         database.ref('games/' + gameID + '/gameOn').update({'gameOn': true});
-
-        // get opponent name
-
+        
         // change database openGame
         database.ref('openGame').update({'openGame': [false]});
-
-        startGame();
     }
+
+    // event listener for players added
+    database.ref('games/' + gameID + '/players').on('value', function(snapshot) {
+
+        // count players
+        var i = 0;
+        snapshot.forEach(function(childSnapshot) {
+            console.log('child --');
+            console.log(childSnapshot.val());
+
+            i++;
+        })
+
+        // if there are two players start game
+        if(i === 2) {
+            startGame();
+        }
+
+    })
 
 }
 
 function startGame() {
+
     //turn off openGame and new player event listener
     database.ref('openGame').off('value');
     database.ref('games/' + gameID + '/players').off('child_added');
+
+    gameOn = true;
+
+
+    // CHAT
+
+    // chat enter button
+    $('#btn-chat').on('click', function() {
+
+        if(gameOn === true) {
+            // get new chat from input field
+            var thisMsg = $('#input-chat').val().trim();
+            // push to database at chat/game reference
+            database.ref('chat/' + gameID).push({'player': playerName, 'msg': thisMsg});
+            //clear input field
+            $('#input-chat').val('');
+        }
+
+    })
+
+    //chat event listener
+    database.ref('chat/' + gameID).on('child_added', function(snapshot) {
+        // format new msg for display
+        console.log(snapshot.val());
+        var msgString = '<b>' + snapshot.val().player + ':</b> ' + snapshot.val().msg;
+        
+        // append new span to chat window
+        var newSpan = $('<span>');
+        newSpan
+            .html(msgString)
+            .prependTo($('#chat-window'));
+    })
 
     console.log('start game');
     console.log(playerName);
