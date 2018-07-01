@@ -150,7 +150,16 @@ function startGame() {
 
     // rps button listener
     $('.rps-button').on('click', function() {
+        // assign to variable
+        var thisPlay = $(this).attr('data-rps');
+        // push to database
+        database.ref('games/' + gameID + '/round').push({'id': playerID, 'play': thisPlay});
+    })
 
+    // listen for new play
+    database.ref('games/' + gameID + '/round').on('value', function(snapshot) {
+        // TEMP
+        console.log(snapshot.val());
     })
 }
 
