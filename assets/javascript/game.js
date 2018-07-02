@@ -134,11 +134,15 @@ function startGame() {
     // game on = true and turn on listener
     gameOn = true;
     database.ref('games/' + gameID + '/gameOn').on('value', function(snapshot) {
-
         // if gameOn changes to false, end the game
         if(snapshot.val().gameOn === false) {
-            endGame();
+            gameOver();
         }
+    })
+
+    // exit game button
+    $('#div-exitButton').on('click', function() {
+        database.ref('games/' + gameID + '/gameOn').update({'gameOn': false});
     })
 
     // start chat
@@ -150,21 +154,84 @@ function startGame() {
 
     // rps button listener
     $('.rps-button').on('click', function() {
-        // assign to variable
-        var thisPlay = $(this).attr('data-rps');
-        // push to database
-        database.ref('games/' + gameID + '/round').push({'id': playerID, 'play': thisPlay});
+
+        if($(this).hasClass('clickable')) {
+            // assign to variable
+            var thisPlay = $(this).attr('data-rps');
+            // push to database
+            database.ref('games/' + gameID + '/round').push({'playerID': playerID, 'play': thisPlay});
+            // disable buttons until next round
+            $('.rps-button').removeClass('clickable');
+
+            console.log('clicked');
+        }
+
     })
 
     // listen for new play
     database.ref('games/' + gameID + '/round').on('value', function(snapshot) {
-        // TEMP
-        console.log(snapshot.val());
+
+        // count plays, assign to local array variable
+        var i = 0;
+        var playArray = [];
+        snapshot.forEach(function(childSnapshot) {
+            playArray.push(childSnapshot.val());
+            i++;
+        })
+
+        if(i === 2) {
+            // if both players have chosen, evaluate and empty round
+            playRound(playArray);
+            database.ref('games/' + gameID + '/round').remove();
+        }
     })
 }
 
+function playRound(arr) {
+
+    // evaluate round -- produces array [outcome for first player, outcome for second player]
+    var eval = [];
+    var outcome = null;
+    switch(arr[0].play) {
+        case 'R':
+            eval = [['tie', 'tie'], ['lose', 'win'], ['win', 'lose']];
+            break;
+        case 'P':
+            eval = [['win', 'lose'], ['tie', 'tie'], ['lose', 'win']];
+            break;
+        case 'S':
+            eval = [['lose', 'win'], ['win', 'lose'], ['tie', 'tie']];
+            break;
+    }
+    switch(arr[1].play) {
+        case 'R':
+            eval = eval[0];
+            break;
+        case 'P':
+            eval = eval[1];
+            break;
+        case 'S':
+            eval = eval[2];
+            break;
+    }
+
+    // if first player is this player, first outcome -- otherwise second
+    if(arr[0].playerID === playerID) {
+        outcome = eval[0];
+    } else {
+        outcome = eval[1];
+    }
+
+
+    console.log('outcome ---------------');
+    console.log('You ' + outcome + '!!');
+
+    // make rps buttons clickable
+    $('.rps-buttons').addClass('clickable');
+}
+
 function gameOver() {
-    console.log('GAME OVER');
+    alert('GAME OVER');
 }
 
 function startChat() {
