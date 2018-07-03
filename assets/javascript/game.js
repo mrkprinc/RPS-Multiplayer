@@ -21,14 +21,12 @@ var playerName = null;
 var opponentName = null;
 var gameOn = false;
 var openGame = [];
+var wins = 0;
+var losses = 0;
 
 // EXECUTE ON LOAD
 
 // start value event listener for open games
-
-// ***TEMP***
-database.ref('openGame').update({'openGame': [false]});
-
 database.ref('openGame').on('value', function(snapshot) {
     // update local variable to match value in firebase
     openGame = snapshot.val().openGame;
@@ -53,6 +51,11 @@ $('#btn-enterGame').on('click', function() {
         // clear field
         $('#input-name').val('');
     }
+})
+
+$('#btn-enterNew').on('click', function() {
+    $('.show-end').slideUp();
+    enterGame();
 })
 
 function enterGame() {
@@ -121,14 +124,19 @@ function startGame() {
     // add player and opponent names to display
     $('#span-name').html(playerName);
     $('#span-opponent').html(opponentName);
+
+    // enable rps buttons
+    $('.rps-button').addClass('clickable');
+
+    console.log('game iD ------');
+    console.log(gameID);
     
     // message
     $('#div-message')
         .html('<span>1, 2, 3...choose!</span>')
         .slideDown();
 
-    // turn off openGame and new player event listener
-    database.ref('openGame').off('value');
+    // turn off new player event listener
     database.ref('games/' + gameID + '/players').off('value');
 
     // game on = true and turn on listener
@@ -145,25 +153,32 @@ function startGame() {
         database.ref('games/' + gameID + '/gameOn').update({'gameOn': false});
     })
 
+    // if user leaves the page, end game
+    $(window).on('unload', function() {
+        gameOver();
+        database.ref('games/' + gameID + '/gameOn').update({'gameOn': false});
+    })
+
     // start chat
     startChat();
 
     // hide start, show gameplay divs
     $('.show-start').slideUp();
     $('.show-play').slideDown();
+    $('.show-message').slideDown();
 
     // rps button listener
     $('.rps-button').on('click', function() {
 
         if($(this).hasClass('clickable')) {
-            // assign to variable
-            var thisPlay = $(this).attr('data-rps');
-            // push to database
-            database.ref('games/' + gameID + '/round').push({'playerID': playerID, 'play': thisPlay});
             // disable buttons until next round
             $('.rps-button').removeClass('clickable');
-
-            console.log('clicked');
+            // assign to variable
+            var thisPlay = $(this).attr('data-rps');
+            // display waiting message
+            $('#div-message').html('<span>Waiting for ' + opponentName + '...');
+            // push to database
+            database.ref('games/' + gameID + '/round').push({'playerID': playerID, 'play': thisPlay});
         }
 
     })
@@ -179,6 +194,9 @@ function startGame() {
             i++;
         })
 
+        console.log('plays snapshot -----');
+        console.log(snapshot.val());
+
         if(i === 2) {
             // if both players have chosen, evaluate and empty round
             playRound(playArray);
@@ -189,7 +207,7 @@ function startGame() {
 
 function playRound(arr) {
 
-    // evaluate round -- produces array [outcome for first player, outcome for second player]
+    // evaluate round -- selects array [outcome for first player, outcome for second player]
     var eval = [];
     var outcome = null;
     switch(arr[0].play) {
@@ -222,16 +240,32 @@ function playRound(arr) {
         outcome = eval[1];
     }
 
+    // display outcome
+    $('#div-message').html('<span>You ' + outcome + '!!');
 
-    console.log('outcome ---------------');
-    console.log('You ' + outcome + '!!');
+    //update wins/losses
+    if(outcome === 'win') {
+        wins++;
+        $('#span-wins').html('W: ' + wins);
+    } else if(outcome === 'lose') {
+        losses++;
+        $('#span-losses').html('L: ' + losses);
+    }
 
     // make rps buttons clickable
-    $('.rps-buttons').addClass('clickable');
+    $('.rps-button').addClass('clickable');
 }
 
 function gameOver() {
-    alert('GAME OVER');
+    $('.show-play').slideUp();
+    $('.show-message').slideUp();
+    $('.show-end').slideDown();
+
+    // turn off event listeners
+    database.ref('games/' + gameID + '/gameOn').off('value');
+    database.ref('games/' + gameID + '/round').off('value');
+    $('.rps-button').off('click');
+    $(window).off('unload');
 }
 
 function startChat() {
@@ -269,6 +303,21 @@ function startChat() {
 // $('#div-mainPlay > div').hide();
 $('.show-start').slideDown();
 
+// submit when user presses enter
+$('#input-name').keyup(function(event) {
+    event.preventDefault();
+    if(event.keyCode === 13) {
+        $('#btn-enterGame').click();
+        $(this).blur();
+    }
+})
+
+$('#input-chat').keyup(function(event) {
+    event.preventDefault();
+    if(event.keyCode === 13) {
+        $('#btn-chat').click();
+    }
+})
 
 })
 // document onload 

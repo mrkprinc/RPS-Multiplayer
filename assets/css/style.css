@@ -1,6 +1,7 @@
 body {
     box-sizing: border-box;
     font-family: 'Roboto Condensed', sans-serif;
+    color: #333;
     line-height: 1.5;
 }
 
