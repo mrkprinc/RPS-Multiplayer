@@ -21,6 +21,8 @@ main {
     right: 0;
     min-width: 300px;
     margin: 0 auto;
+
+    margin-bottom: 32px;
 }
 
 section {
@@ -270,20 +272,30 @@ footer {
     }
 }
 
-@media screen AND (max-height: 575px) {
-    #div-chat {
-        height: auto;
-    }
-
-    #chat-window {
-        display: none;
-    }
-
+@media screen AND (max-height: 600px) {
     .rps-button {
         height: 100px;
     }
 
     header {
+        display: none;
+    }
+
+    #div-chat {
+        height: 175px;
+    }
+}
+
+@media screen AND (max-height: 575px) AND (max-width: 760px) {
+    main {
+        margin-bottom: 0px;
+    }
+
+    #div-chat {
+        height: auto;
+    }
+
+    #chat-window {
         display: none;
     }
 
