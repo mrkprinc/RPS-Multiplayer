@@ -12,6 +12,7 @@ var config = {
     messagingSenderId: "100230497924"
 };
 firebase.initializeApp(config);
+firebase.auth().signInAnonymously();
 var database = firebase.database();
 
 // global variables
@@ -30,7 +31,6 @@ var losses = 0;
 database.ref('openGame').on('value', function(snapshot) {
     // update local variable to match value in firebase
     openGame = snapshot.val().openGame;
-    console.log(openGame);
 })
 
 
@@ -79,8 +79,6 @@ function enterGame() {
 
     } else if(openGame[0] === true) {
 
-        console.log('openGame true');
-
         // join open game
         gameID = openGame[1];
         database.ref('games/' + gameID + '/players').push({'id': playerID, 'name': playerName});
@@ -128,9 +126,6 @@ function startGame() {
     // enable rps buttons
     $('.rps-button').addClass('clickable');
 
-    console.log('game iD ------');
-    console.log(gameID);
-    
     // message
     $('#div-message')
         .html('<span>1, 2, 3...choose!</span>')
@@ -194,9 +189,6 @@ function startGame() {
             i++;
         })
 
-        console.log('plays snapshot -----');
-        console.log(snapshot.val());
-
         if(i === 2) {
             // if both players have chosen, evaluate and empty round
             playRound(playArray);
@@ -241,7 +233,10 @@ function playRound(arr) {
     }
 
     // display outcome
-    $('#div-message').html('<span>You ' + outcome + '!!');
+    $('#div-message').html('<span>You ' + outcome + '!!</span>');
+    var outcomeTimer = setTimeout(function() {
+        $('#div-message').html('<span>1, 2, 3...choose!</span>');
+    }, 1500);
 
     //update wins/losses
     if(outcome === 'win') {
@@ -260,15 +255,21 @@ function gameOver() {
     $('.show-play').slideUp();
     $('.show-message').slideUp();
     $('.show-end').slideDown();
+    $('#div-chat').addClass('fade');
 
     // turn off event listeners
     database.ref('games/' + gameID + '/gameOn').off('value');
     database.ref('games/' + gameID + '/round').off('value');
+    database.ref('chat/' + gameID).off('child_added');
+    $('#btn-chat').off('click');
     $('.rps-button').off('click');
     $(window).off('unload');
 }
 
 function startChat() {
+
+    $('#chat-window').empty();
+    $('#div-chat').removeClass('fade');
 
     // chat enter button
     $('#btn-chat').on('click', function() {
@@ -286,15 +287,15 @@ function startChat() {
 
     //chat event listener
     database.ref('chat/' + gameID).on('child_added', function(snapshot) {
+
         // format new msg for display
-        console.log(snapshot.val());
         var msgString = '<b>' + snapshot.val().player + ':</b> ' + snapshot.val().msg;
-        
         // append new span to chat window
         var newSpan = $('<span>');
         newSpan
             .html(msgString)
             .prependTo($('#chat-window'));
+
     })
 }
 
@@ -318,6 +319,8 @@ $('#input-chat').keyup(function(event) {
         $('#btn-chat').click();
     }
 })
+
+$('#input-name').focus();
 
 })
 // document onload 

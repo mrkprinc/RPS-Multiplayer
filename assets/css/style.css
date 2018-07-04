@@ -103,14 +103,18 @@ input, button {
     width: 150px;
     height: 150px;
     flex-shrink: 1;
-
     display: flex;
     justify-content: center;
 
     background-position: center;
     background-size: cover;
-
     overflow: hidden;
+
+    opacity: 0.5;
+}
+
+.clickable {
+    opacity: 1;
 }
 
 .clickable:hover {
@@ -137,6 +141,17 @@ input, button {
 
 #btnScissors {
     background-image: url('../images/scissor-img.jpg');
+}
+
+#div-message > span {
+    font-size: 18px;
+    animation: message;
+    animation-duration: 3s;
+}
+
+@keyframes message {
+    from {color: #be2a2a}
+    to {color: #333}
 }
 
 #div-playerInfo {
@@ -182,7 +197,7 @@ input, button {
 }
 
 .fade {
-    opacity: 0.65;
+    opacity: 0.25;
 }
 
 header::after, section::after {
@@ -201,8 +216,6 @@ footer {
     text-align: center;
     font-size: 12px;
     border-top: 3px solid #ccc;
-
-    display: none;
 }
 
 .wf1 {
@@ -229,14 +242,6 @@ footer {
         bottom: 35px;
     }
 
-    header {
-        display: block;
-    }
-
-    footer {
-        display: block;
-    }
-
     #div-chat {
         position: static;
         float: right;
@@ -259,10 +264,30 @@ footer {
     #span-opponent {
         font-size: 20px;
     }
+
+    header {
+        display: block;
+    }
 }
 
 @media screen AND (max-height: 575px) {
     #div-chat {
+        height: auto;
+    }
+
+    #chat-window {
+        display: none;
+    }
+
+    .rps-button {
+        height: 100px;
+    }
+
+    header {
+        display: none;
+    }
+
+    footer {
         display: none;
     }
 }
