@@ -301,7 +301,6 @@ function startChat() {
 
 // EXECUTE ON LOAD
 
-// $('#div-mainPlay > div').hide();
 $('.show-start').slideDown();
 
 // submit when user presses enter
@@ -323,4 +322,3 @@ $('#input-chat').keyup(function(event) {
 $('#input-name').focus();
 
 })
-// document onload 

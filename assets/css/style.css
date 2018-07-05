@@ -220,21 +220,6 @@ footer {
     border-top: 3px solid #ccc;
 }
 
-.wf1 {
-    /* border: 1px solid #333; */
-    background-color: #ddd;
-}
-
-.wf2 {
-    border: 1px solid #333;
-    background-color: #ccc;
-}
-
-.wf3 {
-    border: 1px solid #333;
-    background-color: #777;
-}
-
 @media screen AND (min-width: 760px) {
     
     main {
